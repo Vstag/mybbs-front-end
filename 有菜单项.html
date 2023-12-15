@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <!-- <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <style>
+      main {
+        background-color: #F0F3F8;
+      }
+
+      main > section {
+        padding-top: 4.5rem;
+      }
+
+      section > div div {
+          margin-bottom: 25px;
+      }
+
+      .carousel {
+          height: 300px!important;
+          overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg bg-custom navbar-dark fixed-top">
+        <div class="container">
+            <!-- 标题 -->
+            <a href="#" class="navbar-brand">标题</a>
+
+            <!-- 展开按钮 -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- 菜单项 -->
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link">主页</a></li>
+                    <li class="nav-item"><a class="nav-link">主页</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          下拉框
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="#">Action</a></li>
+                          <li><a class="dropdown-item" href="#">Another action</a></li>
+                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- 搜索框 -->
+                <form class="d-flex me-5" role="search">
+                    <input class="form-control me-2" type="search" placeholder="搜索" aria-label="Search">
+                    <button class="btn btn-outline-success border-0 bi-search" type="submit" style="margin-left:-3rem"></button>
+                </form>
+                <!-- 按钮 -->
+                <div class="button-group">
+                    <button type="button" class="btn btn-custom text-white bi-bell-fill"></button>
+                    <button type="button" class="btn btn-custom text-white bi-person-circle"></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    
+
+    <!-- 主要内容 -->
+    <main class="container-fluid">
+        <!-- 内容 -->
+        <section class="col-md d-flex justify-content-center ms-auto overflow-auto">
+            <div class="col-lg-8">
+            <!-- 轮播图 -->
+            <div id="carouselExampleIndicators" class="carousel slide">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                    <img src="/img/2016instbg_01.jpg" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                    <img src="/img/2016instbg_01.jpg" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                    <img src="/img/2016instbg_01.jpg" class="d-block w-100" alt="...">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                </div>
+            <!-- 卡片1 -->
+            <div class="card" style="width: 100%;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+            <!-- 卡片2 -->
+            <div class="card" style="width: 100%;">
+                <div class="card-header">
+                Featured
+                </div>
+                <ul class="list-group list-group-flush">
+                <li class="list-group-item">An item</li>
+                <li class="list-group-item">A second item</li>
+                <li class="list-group-item">A third item</li>
+                </ul>
+            </div>
+            <!-- 卡片3 -->
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JSP -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="/js/bootstrap.min.js"></script> -->
+  </body>
+</html>
