@@ -1,21 +1,9 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>用户登录</title>
-    <!-- <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link href="/css/bootstrap.css" rel="stylesheet">
-    <link href="/font/bootstrap-icons.min.css" rel="stylesheet">
+<script setup>
 
-    <!-- CSS -->
-    <style>
-        
-    </style>
-  </head>
-  <body>
+</script>
 
-    <div class="container" style="max-width: 550px">
+<template>
+  <div class="container" style="max-width: 550px">
         <h2 class="text-center text-custom pt-5 pb-5">用户登录</h2>
         <div class="bg-white p-4 shadow-sm rounded border">
             <form action="#" method="post" enctype="multipart/form-data">
@@ -33,9 +21,8 @@
             <a class="link-custom text-decoration-none float-end" href="#">忘记密码</a>
         </div>
     </div>
+</template>
 
-    <!-- JSP -->
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="/js/bootstrap.min.js"></script> -->
-  </body>
-</html>
+<style lang="scss" scoped>
+
+</style>
