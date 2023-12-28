@@ -11,8 +11,13 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.2",
+    "pinia": "^2.1.7",
+    "pinia-persistedstate": "^0.1.2",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "sass": "^1.69.5",
-    "vue": "^3.3.11"
+    "shvl": "^3.0.0",
+    "vue": "^3.3.11",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",

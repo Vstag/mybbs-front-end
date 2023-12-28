@@ -1,8 +1,12 @@
 <script setup>
     import {ref} from 'vue'
+    import {useRouter} from 'vue-router' // 导入路由
+    import {useTokenStore} from '@/stores/token.js'
     import {userRegisterService, userLoginService} from '@/api/user.js' // 导入用户接口
 
     const isRegister = ref(false) // 控制注册与登录表单的显示
+    const router = useRouter()
+    const tokenStore = useTokenStore()
 
     // 定义数据模型
     const registerData = {
@@ -38,6 +42,8 @@
             let result = await userLoginService(loginData)
             if (result.code === 0) {
                 warnBox(result.message ? result.message : '登录成功！', 'alert-success', 'bi-check-circle-fill')
+                tokenStore.setToken(result.data) // 把token存到pinia中
+                router.push('/') // 跳转到首页
             } else {
                 warnBox(result.message ? result.message : '登录失败！', 'alert-danger', 'bi-exclamation-triangle-fill')
             }
