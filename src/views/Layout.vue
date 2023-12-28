@@ -1,58 +1,126 @@
 <script setup>
-    import router from '@/router';
+    import { ref } from 'vue'
 
+    const activeIndex = ref('')
+    const value = ref(false) // 开关默认状态
+
+    // 搜索
 </script>
 
 <template>
-    <!-- 导航栏 -->
-    <nav class="navbar navbar-expand-lg bg-custom navbar-dark fixed-top">
-        <div class="container">
-            <!-- 标题 -->
-            <router-link to="#" class="navbar-brand">标题</router-link>
+    <el-container class="common-layout" style="background-color: #F0F3F8">
+        <!-- 菜单栏 -->
+        <el-header style="padding: 0;">
+            <el-affix :offset="0">
+                <el-menu
+                    :default-active="activeIndex"
+                    class="el-menu"
+                    mode="horizontal"
+                    :ellipsis="false"
+                    @select="handleSelect"
+                >
+                    <!-- LOGO -->
+                    <el-menu-item>
+                        <img
+                            style="width: 80px"
+                            src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/e08da34488b114bd4c665ba2fa520a31.svg"
+                            alt="LOGO"
+                        />
+                    </el-menu-item>
 
-            <!-- 展开按钮 -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                    <!-- 左侧菜单项 -->
+                    <el-menu-item index="index">首页</el-menu-item>
+                    <el-menu-item index="article">文章</el-menu-item>
+                    <el-menu-item index="">其他</el-menu-item>
 
-            <!-- 菜单项 -->
-            <div class="collapse navbar-collapse" id="navmenu">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><router-link class="nav-link" to="#">主页</router-link></li>
-                    <li class="nav-item"><router-link class="nav-link" to="/article/list">文章</router-link></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            下拉框
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><router-link class="dropdown-item" to="#">Action</router-link></li>
-                            <li><router-link class="dropdown-item" to="#">Another action</router-link></li>
-                            <li><router-link class="dropdown-item" to="#">Something else here</router-link></li>
-                        </ul>
-                    </li>
-                </ul>
-                <!-- 搜索框 -->
-                <form class="d-flex me-5" role="search">
-                    <input class="form-control me-2" type="search" placeholder="搜索" aria-label="Search">
-                    <button class="btn btn-outline-success border-0 bi-search" type="submit" style="margin-left:-3rem"></button>
-                </form>
-                <!-- 按钮 -->
-                <div class="button-group">
-                    <button type="button" class="btn btn-custom text-white bi-bell-fill"></button>
-                    <button type="button" class="btn btn-custom text-white bi-person-circle"></button>
-                </div>
-            </div>
-        </div>
-    </nav>
+                    <div class="flex-grow" />
 
-    <!-- 主体内容 -->
-    <main class="container pt-5">
-        <router-view></router-view>
-    </main>
+                    <!-- 搜索框 -->
+                    <el-space>
+                        <el-autocomplete
+                            v-model="state"
+                            :fetch-suggestions="querySearch"
+                            popper-class="my-autocomplete"
+                            placeholder="搜索..."
+                            @select="handleSelect"
+                        >
+                            <template #suffix>
+                                <el-icon class="el-input__icon" @click="handleIconClick">
+                                    <Search />
+                                </el-icon>
+                            </template>
+                            <template #default="{ item }">
+                                <div class="value">{{ item.value }}</div>
+                                <span class="link">{{ item.link }}</span>
+                            </template>
+                        </el-autocomplete>
+                    </el-space>
+
+                    <div class="flex-grow" />
+
+                    <!-- 右侧菜单项 -->
+                    <el-space :size="25">
+                        <el-switch
+                            v-model="value"
+                            class="ml-2"
+                            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                        />
+
+                        <!-- 通知 -->
+                        <el-dropdown trigger="click">
+                            <el-button type="" link>
+                                <span class="el-dropdown-link">
+                                    <el-icon :size="20" :color="color">
+                                        <BellFilled />
+                                    </el-icon>
+                                </span>
+                            </el-button>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item class="clearfix">
+                                        comments
+                                    <el-badge class="mark" :value="12" />
+                                    </el-dropdown-item>
+                                    <el-dropdown-item class="clearfix">
+                                        replies
+                                    <el-badge class="mark" :value="3" />
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
+                        
+                        <!-- 用户 -->
+                        <el-dropdown class="ml-2">
+                            <el-button type="" circle>
+                                <el-icon :size="20" :color="color">
+                                    <UserFilled />
+                                </el-icon>
+                            </el-button>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item>Action 1</el-dropdown-item>
+                                    <el-dropdown-item>Action 2</el-dropdown-item>
+                                    <el-dropdown-item>Action 3</el-dropdown-item>
+                                    <el-dropdown-item disabled>Action 4</el-dropdown-item>
+                                    <el-dropdown-item divided>Action 5</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
+
+                    </el-space>
+                </el-menu>
+            </el-affix>
+        </el-header>
+
+        <!-- 主体内容 -->
+        <el-main class="container">
+            <router-view></router-view>
+        </el-main>
+    </el-container>
 </template>
 
 <style scoped>
-    body {
-        background-color: #F0F3F8;
+    .flex-grow {
+        flex-grow: 1;
     }
 </style>

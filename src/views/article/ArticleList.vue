@@ -7,7 +7,7 @@
 
     // 分页条相关变量
     const pageNum = ref(1) // 当前页
-    const pageSize = ref(5) // 每页条数
+    const pageSize = ref(10) // 每页条数
     const total = ref(20) // 总条数
 
     // 在每页条数改变时调用
@@ -48,87 +48,68 @@
 </script>
 
 <template>
-    <div class="row">
+    <el-row justify="center">
         <!-- 左侧栏 -->
-        <aside class="p-0 pt-4 d-none d-lg-block col-lg-2">
-            <div class="card list-group p-2">
-                <button type="button" class="list-group-item list-group-item-action" aria-current="true">全部</button>
-                <button type="button" class="list-group-item list-group-item-action" v-for="category in categories" :key="category.id">{{ category.categoryName }}</button>
-            </div>
-        </aside>
+        <el-col class="hidden-sm-and-down" :span="5" style="padding-right: 15px;justify-content: end">
+            <el-space direction="vertical" :size="15">
+                <el-card v-for="i in 2" :key="i" class="box-card" style="width: 250px">
+                    <template #header>
+                        <div class="card-header">
+                        <span>Card name</span>
+                        </div>
+                    </template>
+                    <div v-for="o in 4" :key="o" class="text item">
+                        {{ 'List item ' + o }}
+                    </div>
+                </el-card>
+            </el-space>
+        </el-col>
 
         <!-- 文章列表 -->
-        <article class="pt-4 col-lg-7">
-            <div class="card pt-2 pb-2">
-
-                <!-- 文章信息 -->
-                <div class="card mb-0 border-0 rounded-0" v-for="article in articles" :key="article.id">
-                    <div class="row g-0">
-                        <div class="card-body m-auto col-8 col-md-9">
-                            <h5 class="card-title"><a class="link-dark text-decoration-none" href="#">{{ article.title }}</a></h5>
-                            <p class="card-text text-truncate">{{ article.content }}</p>
-                            <div class="action button-group">
-                                <button type="button" class="btn text-muted p-0">
-                                    <span class=" me-3" style="font-size: small;">{{ article.createUser }}</span>
-                                </button>
-
-                                <button type="button" class="btn text-muted p-0 bi-eye">
-                                    <span class="me-3" style="font-size: small;">11k</span>
-                                </button>
-                                
-                                <button type="button" class="btn text-muted p-0 bi-hand-thumbs-up">
-                                    <span class="" style="font-size: small;">1145</span>
-                                </button>
-
-                                <span class="badge bg-secondary float-end p-1 mt-1">类别</span>
-                            </div>
+        <el-col :xs="24" :sm="24" :md="16" :lg="11" :xl="10" style="padding: 1rem, 0">
+            <el-space class="article-list" :size="0" fill style="width: 100%;">
+                <el-card v-for="i in 13" :key="i" style="width: 250px">
+                    <template #header>
+                        <div class="card-header">
+                        <span>Card name</span>
                         </div>
-                        <div class="col-4 col-md-3 p-3">
-                            <img src="/img/2016instbg_01.jpg" class="img-fluid rounded h-100" alt="...">
-                        </div>
+                    </template>
+                    <div v-for="o in 4" :key="o" class="text item">
+                        {{ 'List item ' + o }}
                     </div>
-                    <!-- 分割线 -->
-                    <hr class="ms-3 me-3 mt-0 mb-0" v-if="article !== articles[articles.length - 1]">
-                </div>
-                
-            </div>
-        </article>
+                </el-card>
+            </el-space>
+        </el-col>
 
         <!-- 右侧栏 -->
-        <aside class="p-0 pt-4 d-none d-lg-block col-md-2">
-            <div class="card text-bg-light mb-3" style="max-width: 18rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <h5 class="card-title">Light card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-                </div>
-                <div class="card text-bg-dark mb-3" style="max-width: 18rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <h5 class="card-title">Dark card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-                </div>
-        </aside>
-    </div>
+        <el-col class="hidden-md-and-down" :span="5" style="padding-left: 15px;justify-content: start;">
+            <el-space direction="vertical" :size="15">
+                <el-card v-for="i in 2" :key="i" class="box-card" style="width: 250px">
+                    <template #header>
+                        <div class="card-header">
+                        <span>Card name</span>
+                        </div>
+                    </template>
+                    <div v-for="o in 4" :key="o" class="text item">
+                        {{ 'List item ' + o }}
+                    </div>
+                </el-card>
+            </el-space>
+        </el-col>
+    </el-row>
 </template>
 
 <style scoped>
-    aside,
-    article {
-        padding-top: 4.5rem;
+    .el-col {
+        display: flex;
+        justify-content: center
     }
 
-    .list-group button{
-        border: none!important;
+    .article-list {
+        border: 1px solid var(--el-border-color);
     }
 
-    article > .card > .card:hover {
-        background-color: #F8F9FA;
-    }
-
-    .action button {
-        border: none;
+    .el-card {
+        box-shadow: 0 0px 0px #ccc!important;
     }
 </style>
