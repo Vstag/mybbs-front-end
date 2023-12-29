@@ -1,5 +1,6 @@
 <script setup>
     import { ref } from 'vue'
+    import { Sunny, Moon } from '@element-plus/icons-vue'
 
     const activeIndex = ref('')
     const value = ref(false) // 开关默认状态
@@ -8,7 +9,7 @@
 </script>
 
 <template>
-    <el-container class="common-layout" style="background-color: #F0F3F8">
+    <el-container class="common-layout">
         <!-- 菜单栏 -->
         <el-header style="padding: 0;">
             <el-affix :offset="0">
@@ -19,10 +20,13 @@
                     :ellipsis="false"
                     @select="handleSelect"
                 >
+
+                    <div class="flex-grow" style="max-width: 7rem;" />
+
                     <!-- LOGO -->
-                    <el-menu-item>
+                    <el-menu-item class="hidden-sm-and-down">
                         <img
-                            style="width: 80px"
+                            style="width: 100px"
                             src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/e08da34488b114bd4c665ba2fa520a31.svg"
                             alt="LOGO"
                         />
@@ -63,7 +67,10 @@
                         <el-switch
                             v-model="value"
                             class="ml-2"
-                            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                            style="--el-switch-on-color: #2C2C2C; --el-switch-off-color: #DCDFE6"
+                            inline-prompt
+                            :active-icon="Moon"
+                            :inactive-icon="Sunny"
                         />
 
                         <!-- 通知 -->
@@ -76,7 +83,7 @@
                                 </span>
                             </el-button>
                             <template #dropdown>
-                                <el-dropdown-menu>
+                                    <el-dropdown-menu>
                                     <el-dropdown-item class="clearfix">
                                         comments
                                     <el-badge class="mark" :value="12" />
@@ -106,8 +113,10 @@
                                 </el-dropdown-menu>
                             </template>
                         </el-dropdown>
-
                     </el-space>
+
+                    <div class="flex-grow" style="max-width: 7rem;" />
+
                 </el-menu>
             </el-affix>
         </el-header>
