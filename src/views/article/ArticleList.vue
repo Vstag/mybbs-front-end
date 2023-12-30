@@ -46,17 +46,11 @@
     articleList()
     
     // 无限滚动
-    const count = ref(6);
-    const loading = ref(false);
-    const noMore = computed(() => count.value >= 30);
-    const disabled = computed(() => loading.value || noMore.value);
-    const load = () => {
-        loading.value = true;
-        setTimeout(() => {
-            count.value += 5;
-            loading.value = false;
-        }, 1000);
-    };
+    import { count, loading, noMore, disabled, load } from '@/utils/scroll'
+
+    // 图片链接
+    import { Picture as IconPicture } from '@element-plus/icons-vue'
+    const url = 'ttps://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
 </script>
 
 <template>
@@ -64,7 +58,7 @@
         <!-- 左侧栏 -->
         <el-col class="hidden-sm-and-down" :span="6" style="padding-right: 15px;justify-content: end">
             <el-space direction="vertical" :size="15">
-                <el-affix :offset="85">
+                <el-affix target=".el-main" :offset="85">
                     <!-- 文章分类列表 -->
                     <el-space class="category-list" direction="vertical" fill :fill-ratio="90" style="width: 200px;padding-top: 0.5rem;;">
                         <el-button
@@ -80,31 +74,72 @@
         </el-col>
 
         <!-- 文章列表 -->
-        <el-col :xs="24" :sm="24" :md="16" :lg="11" :xl="10" style="padding: 1rem, 0">
-            <el-space 
-                class="article-list"
-                :size="0"
-                fill
-                v-infinite-scroll="load"
-                :infinite-scroll-disabled="disabled"
-                :infinite-scroll-immediate="true"
-                :infinite-scroll-distance="1"
-                style="width: 100%;height: 50rem;"
+        <el-col class="article-list" :xs="24" :sm="24" :md="16" :lg="11" :xl="10" style="padding: 0.5rem;padding-top: 0;">
+            <el-tabs 
+                v-model="activeName"
+                @tab-click="handleClick" 
+                style="width: 100%"
             >
-                <el-card v-for="i in count" :key="i" style="width: 250px">
-                    <template #header>
-                        <div class="card-header">
-                            <span>Card name</span>
-                        </div>
-                    </template>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        {{ 'List item ' + o }}
-                    </div>
-                </el-card>
+                <el-tab-pane label="User" name="first">
+                    <el-space :size="0" fill style="width: 100%;">
+                        <el-row v-for="i in count" :key="i" justify="center" style="width: 250px">
+                            <!-- 文章内容 -->
+                            <el-card class="article" style="width: 100%;border-radius: 0;border: none;">
+                                <el-row>
+                                    <!-- 文章信息 -->
+                                    <el-col :span="19" style="flex-direction: column">
+                                        <h3 style="margin: 0">Card name</h3>
+                                        <p class="article-intro" style="color: #73767a;overflow: hidden;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden;">
+                                            Card content :infinite-scroll-distance="1" style="width: 100%;height: 50rem"Card content :infinite-scroll-distance="1" style="width: 100%;height: 50rem"0rem"Card content :infinite-scroll-distance="1" style="width: 100%;height: 50rem
+                                        </p>
 
-                <p v-if="noMore" style="text-align: center;color: #C0C4CC;">已经到底了...</p>
-                <p v-loading="loading" style="height: 50px;"></p>
-            </el-space>
+                                        <div style="display: flex;justify-content: space-between">
+                                            <div class="article-info">
+                                                <span>作者</span>
+                                                <el-divider direction="vertical" />
+                                                <span>
+                                                    <el-icon>
+                                                        <View />
+                                                    </el-icon>
+                                                    1234
+                                                </span>
+                                                <el-divider direction="vertical" />
+                                                <span>
+                                                    <el-icon>
+                                                        <CaretTop />
+                                                    </el-icon>
+                                                    1234
+                                                </span>
+                                            </div>
+
+                                            <el-tag size="small" style="margin-right: 1rem;">Tag 1</el-tag>
+                                        </div>
+                                    </el-col>
+                                    
+                                    <!-- 文章封面 -->
+                                    <el-col :span="5">
+                                        <el-image :src="url" :fit="cover" style="width: 100%;border-radius: 5px;">
+                                            <template #error>
+                                                <div class="image-slot">
+                                                    <el-icon><icon-picture /></el-icon>
+                                                </div>
+                                            </template>
+                                        </el-image>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+
+                            <!-- 分割线 -->
+                            <el-divider style="width: 95%;margin: 0;" />
+                        </el-row>
+
+                        <p v-loading="loading" style="height: 40px;">
+                            <p v-if="noMore" style="text-align: center;color: var(--el-text-color-placeholder);font-size: small">已经到底了...</p>
+                        </p>
+                    </el-space>
+                </el-tab-pane>
+                <el-tab-pane label="Config" name="second">Config</el-tab-pane>
+            </el-tabs>
         </el-col>
 
         <!-- 右侧栏 -->
@@ -133,12 +168,36 @@
 
     .category-list,
     .article-list {
-        background-color: white;
+        background-color: var(--el-bg-color);
         border: 1px solid var(--el-border-color);
+        border-radius: 5px
+    }
+
+    .article:hover {
+        background-color: var(--el-fill-color-light);
     }
 
     .el-card {
+        background-color: var(--el-bg-color);
         box-shadow: 0 0px 0px #ccc!important;
+    }
+
+    .article-info,
+    .article-intro
+     {
+        font-size: small;
+        color: var(--el-text-color-secondary);
+    }
+
+    .image-slot {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background: var(--el-fill-color);
+        color: var(--el-text-color-secondary);
+        font-size: 30px;
     }
     
 </style>

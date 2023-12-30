@@ -1,7 +1,13 @@
 <script setup>
     import { ref } from 'vue'
     import { Sunny, Moon } from '@element-plus/icons-vue'
+    import { count, loading, noMore, disabled, load } from '@/utils/scroll'
+    import { useDark, useToggle } from '@vueuse/core'
 
+    // 黑暗模式
+    const isDark = useDark()
+    const toggleDark = useToggle(isDark)
+    
     const activeIndex = ref('')
     const value = ref(false) // 开关默认状态
 
@@ -9,7 +15,10 @@
 </script>
 
 <template>
-    <el-container class="common-layout">
+    <div class="common-layout" v-infinite-scroll="load"
+            :infinite-scroll-disabled="disabled"
+            :infinite-scroll-immediate="true"
+            :infinite-scroll-distance="1">
         <!-- 菜单栏 -->
         <el-header style="padding: 0;">
             <el-affix :offset="0">
@@ -27,7 +36,7 @@
                     <el-menu-item class="hidden-sm-and-down">
                         <img
                             style="width: 100px"
-                            src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/e08da34488b114bd4c665ba2fa520a31.svg"
+                            src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/e08da34488b114bd4c665ba2fa520a31.sv"
                             alt="LOGO"
                         />
                     </el-menu-item>
@@ -65,8 +74,7 @@
                     <!-- 右侧菜单项 -->
                     <el-space :size="25">
                         <el-switch
-                            v-model="value"
-                            class="ml-2"
+                            v-model="isDark"
                             style="--el-switch-on-color: #2C2C2C; --el-switch-off-color: #DCDFE6"
                             inline-prompt
                             :active-icon="Moon"
@@ -122,10 +130,13 @@
         </el-header>
 
         <!-- 主体内容 -->
-        <el-main class="container">
+        <el-main style="background-color: var(--el-fill-color-lighter);">
             <router-view></router-view>
         </el-main>
-    </el-container>
+
+        <!-- 回到顶部 -->
+        <el-backtop class="hidden-sm-and-down" :right="30" :bottom="40" />
+    </div>
 </template>
 
 <style scoped>
