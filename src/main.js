@@ -1,3 +1,5 @@
+import './assets/main.scss'
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from '@/router'
@@ -8,10 +10,6 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/display.css'
 import 'element-plus/theme-chalk/dark/css-vars.css' // 黑暗模式主题
-// import './bootstrapt/font/bootstrap-icons.css'
-// import './bootstrapt/css/bootstrap.css'
-// // import './bootstrapt/js/bootstrap.min'
-// import './bootstrapt/js/bootstrap.bundle'
 
 const app = createApp(App)
 const pinia = createPinia()

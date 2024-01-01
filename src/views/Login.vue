@@ -1,127 +1,183 @@
 <script setup>
-    import {ref} from 'vue'
-    import {useRouter} from 'vue-router' // 导入路由
-    import {useTokenStore} from '@/stores/token.js'
-    import {userRegisterService, userLoginService} from '@/api/user.js' // 导入用户接口
+import {ref} from 'vue'
+import {useRouter} from 'vue-router' // 导入路由
+import {useTokenStore} from '@/stores/token.js'
+import {userRegisterService, userLoginService} from '@/api/user.js' // 导入用户接口
+import { ElMessage } from 'element-plus'
+import { User, Lock, Message } from '@element-plus/icons-vue' // 导入图标
 
-    const isRegister = ref(false) // 控制注册与登录表单的显示
-    const router = useRouter()
-    const tokenStore = useTokenStore()
+const isRegister = ref(false) // 控制注册与登录表单的显示
+const router = useRouter()
+const tokenStore = useTokenStore()
 
-    // 定义数据模型
-    const registerData = {
-        username: '',
-        password: '',
-        rePassword: '',
-        email: '',
-    }
+// 定义数据模型
+const registerData = ref({
+    username: '',
+    password: '',
+    rePassword: '',
+    email: '',
+})
 
-    const loginData = {
-        username: '',
-        password: '',
+//清空数据模型的数据
+const clearRegisterData = ()=>{
+    registerData.value={
+        username:'',
+        password:'',
+        rePassword:'',
+        email: ''
     }
+}
 
-    // 警告框函数
-    const message = ref('') // 警告框信息
-    const type = ref('alert-primary') // 警告框样式
-    const icon = ref('') // 图标框样式
-    const warnBox = (msg, typ, ico) => {
-        message.value = msg
-        type.value = typ
-        icon.value = ico
+// 表单校验相关
+// 校验密码
+const checkRePassword = (rule, value, callback) => {
+    if (!value) {
+        callback(new Error('请再次输入密码'))
+    } else if (value !== registerData.value.password) {
+        callback(new Error('两次输入的密码不一致'))
     }
+    callback()
+}
+// 校验规则
+const rules = {
+    username: [
+        { required: true, message: '请输入用户名', trigger: 'blur' },
+        { min: 3, max: 16, message: '长度为3~16位非空字符', trigger: 'blur' }
+    ],
+    email: [
+        { required: true, message: '请输入邮箱', trigger: 'blur' },
+    ],
+    password: [
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { min: 3, max: 16, message: '长度为3~16位非空字符', trigger: 'blur' }
+    ],
+    rePassword: [
+        { validator: checkRePassword, trigger: 'blur' },
+        { min: 3, max: 16, message: '长度为3~16位非空字符', trigger: 'blur' }
+    ]
+}
 
-    // 登录校验
-    const loginCheck = async (loginData) => {
-        if (!loginData.username) {
-            warnBox('请输入用户名！', 'alert-warning', 'bi-exclamation-circle-fill')
-        } else if (!loginData.password) {
-            warnBox('请输入密码！', 'alert-warning', 'bi-exclamation-circle-fill')
-        } else {
-            // 调用登录接口
-            let result = await userLoginService(loginData)
-            if (result.code === 0) {
-                warnBox(result.message ? result.message : '登录成功！', 'alert-success', 'bi-check-circle-fill')
-                tokenStore.setToken(result.data) // 把token存到pinia中
-                router.push('/') // 跳转到首页
-            } else {
-                warnBox(result.message ? result.message : '登录失败！', 'alert-danger', 'bi-exclamation-triangle-fill')
-            }
-        }
-    }
-    
-    // 注册校验
-    const registerCheck = async (registerData) => {
-        if (!registerData.username) {
-            warnBox('请输入用户名！', 'alert-warning', 'bi-exclamation-circle-fill')
-        } else if (!registerData.email) {
-            warnBox('请输入邮箱！', 'alert-warning', 'bi-exclamation-circle-fill')
-        } else if (!registerData.password) {
-            warnBox('请输入密码！', 'alert-warning', 'bi-exclamation-circle-fill')
-        } else if (!registerData.rePassword) {
-            warnBox('请再次输入密码！', 'alert-warning', 'bi-exclamation-circle-fill')
-        } else if (registerData.password !== registerData.rePassword) {
-            warnBox('两次输入的密码不一致！', 'alert-warning', 'bi-exclamation-circle-fill')
-        } else {
-            // 调用注册接口
-            let result = await userRegisterService(registerData)
-            if (result.code === 0) {
-                warnBox(result.message ? result.message : '注册成功！', 'alert-success', 'bi-check-circle-fill')
-            } else {
-                warnBox(result.message ? result.message : '注册失败！', 'alert-danger', 'bi-exclamation-triangle-fill')
-            }
-        }
-    }
+// 调用登录接口
+const login = async() => {
+    let result =  await userLoginService(registerData.value);
+    ElMessage.success(result.msg ? result.msg : '登录成功')
+
+    tokenStore.setToken(result.data) //把得到的token存储到pinia中
+    router.push('/') //跳转到首页
+}
+
+// 调用注册接口
+const register = async() => {
+    let result = await userRegisterService(registerData.value)
+    ElMessage.success(result.msg ? result.msg : '注册成功')
+}
 
 </script>
 
 <template>
-    <div class="container" style="max-width: 550px">
-        <!-- 警告框 -->
-        <div class="alert d-flex" :class="type" role="alert" v-if="message">
-            <div class="flex-shrink-0 me-2" :class="icon"></div>
-            {{ message }}
-        </div>
+    <el-span class="login-page">
+        <el-card class="form">
+            <!-- 注册表单 -->
+            <el-form ref="form" autocomplete="off" v-if="isRegister" :model="registerData" :rules="rules">
+                <el-form-item>
+                    <h1 class="title">用户注册</h1>
+                </el-form-item>
+                <el-form-item prop="username">
+                    <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="registerData.username"></el-input>
+                </el-form-item>
+                <el-form-item prop="email">
+                    <el-input :prefix-icon="Message" placeholder="请输入邮箱" v-model="registerData.email"></el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input :prefix-icon="Lock" type="password" placeholder="请输入密码"
+                        v-model="registerData.password"></el-input>
+                </el-form-item>
+                <el-form-item prop="rePassword">
+                    <el-input :prefix-icon="Lock" type="password" placeholder="请输入再次密码"
+                        v-model="registerData.rePassword"></el-input>
+                </el-form-item>
 
-        <!-- 登录表单 -->
-        <div v-if="!isRegister">    
-            <h2 class="text-center text-custom pt-5 pb-5">用户登录</h2>
-            <div class="bg-white p-4 shadow-sm rounded border">
-                <form action="#" method="post" enctype="multipart/form-data" :model="loginData">
-                    <input type="text" class="form-control mb-4" placeholder="用户名" v-model="loginData.username">
-                    <input type="password" class="form-control mb-4" placeholder="密码" v-model="loginData.password">
-                    <div class="button-group mb-4">
-                        <input class="form-check-input me-2" id="remember_me" type="checkbox" value="">
-                        <label class="form-check-label" for="remember_me">记住我</label>
+                <!-- 注册按钮 -->
+                <el-form-item>
+                    <el-button class="button" type="primary" auto-insert-space @click="register">
+                        注册
+                    </el-button>
+                </el-form-item>
+
+                <el-form-item class="flex" style="margin: 0;">
+                    <el-link type="info" :underline="false" @click="isRegister = false;clearRegisterData()">
+                        登录
+                    </el-link>
+                </el-form-item>
+            </el-form>
+
+            <!-- 登录表单 -->
+            <el-form ref="form" autocomplete="off" v-else :model="registerData" :rules="rules">
+                <el-form-item>
+                    <h1 class="title">用户登录</h1>
+                </el-form-item>
+                <el-form-item prop="username">
+                    <el-input :prefix-icon="User" placeholder="请输入用户名" v-model="registerData.username"></el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input name="password" :prefix-icon="Lock" type="password" placeholder="请输入密码" v-model="registerData.password"></el-input>
+                </el-form-item>
+                <el-form-item class="flex">
+                    <div class="flex">
+                        <el-checkbox>记住我</el-checkbox>
+                        <el-link type="primary" :underline="false">忘记密码？</el-link>
                     </div>
-                    <input type="submit" class="btn btn-custom text-white w-100" value="登录" @click.prevent="loginCheck(loginData)">
-                </form>
-            </div>
-            <div class="button-group m-2">
-                <a class="link-custom text-decoration-none" href="#" @click="isRegister = true">注册</a>
-                <a class="link-custom text-decoration-none float-end" href="#">忘记密码</a>
-            </div>
-        </div>
+                </el-form-item>
 
-        <!-- 注册表单 -->
-        <div v-if="isRegister"> 
-            <h2 class="text-center text-custom pt-5 pb-5">用户注册</h2>
-            <div class="bg-white p-4 shadow-sm rounded border">
-                <form action="#" method="post" enctype="multipart/form-data" :model="registerData">
-                    <input type="text" class="form-control mb-4" placeholder="用户名" v-model="registerData.username">
-                    <input type="email" class="form-control mb-4" placeholder="邮箱" v-model="registerData.email">
-                    <input type="password" class="form-control mb-4" placeholder="密码" v-model="registerData.password">
-                    <input type="password" class="form-control mb-4" placeholder="确认密码" v-model="registerData.rePassword">
-                    <input type="submit" class="btn btn-custom text-white w-100" value="注册" @click.prevent="registerCheck(registerData)">
-                </form>
-            </div>
-            <div class="button-group m-2">
-                <a class="link-custom text-decoration-none" href="#" @click="isRegister = false">返回登录</a>
-            </div>
-        </div>
-    </div>      
+                <!-- 登录按钮 -->
+                <el-form-item>
+                    <el-button class="button" type="primary" auto-insert-space @click="login">登录</el-button>
+                </el-form-item>
+
+                <el-form-item class="flex" style="margin: 0;">
+                    <el-link type="info" :underline="false" @click="isRegister = true;clearRegisterData()">
+                        注册
+                    </el-link>
+                </el-form-item>
+            </el-form>
+        </el-card>
+    </el-span>     
 </template>
 
 <style lang="scss" scoped>
-    
+.login-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center ;
+    background: url(https://picx.zhimg.com/3b5d9eaa6b80cf4983b709a28662975c_r.jpg?source=1def8aca) no-repeat;
+    background-size: cover;
+
+    .form {
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        user-select: none;
+        border-radius: 5px;
+        box-shadow: var(--el-box-shadow)!important;
+
+        .title {
+            margin: 15px auto;
+            margin-top: 30px;
+            font-weight: normal;
+        }
+
+        .button {
+            width: 100%;
+        }
+
+        .flex {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
 </style>
