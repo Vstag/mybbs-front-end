@@ -22,8 +22,6 @@ articleCategoryList()
 // 获取文章列表
 const articles = ref('') // 文章列表内容
 const articleList = async() => {
-    console.log(count.value);
-
     let params = {
         pageNum: pageNum.value,
         pageSize: pageSize.value,

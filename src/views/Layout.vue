@@ -129,8 +129,8 @@ const value = ref(false) // 开关默认状态
         </el-header>
 
         <!-- 主体内容 -->
-        <el-main style="background-color: var(--el-fill-color-lighter);">
-            <router-view></router-view>
+        <el-main>
+            <router-view/>
         </el-main>
 
         <!-- 回到顶部 -->
