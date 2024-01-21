@@ -1,34 +1,29 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
-// 导入组件
-import LoginVue from '@/views/Login.vue'
-import LayoutVue from '@/views/Layout.vue'
-
-import ArticleListVue from '@/views/article/ArticleList.vue'
-// import ArticleListVue from '@/views/article/ArticleList.vue'
-// import ArticleListVue from '@/views/article/ArticleList.vue'
-
 // 定义路由关系
 const routes = [
     {
         path: '/login',
-        component: LoginVue
+        component: () => import('@/views/Login.vue')
     },
     {
         path: '/',
-        component: LayoutVue,
-        redirect: '/article/list', // 重定向
-        // 子路由
+        component: () => import('@/views/Layout.vue'),
+        redirect: '/home' // 重定向      
+    },
+    {
+        path: '/article',
+        component: () => import('@/views/Layout.vue'),
+        redirect: '/article/list',
         children: [
             {
                 path: '/article/list',
-                component: ArticleListVue
+                component: () => import('@/views/article/List.vue')
             },
-            // {
-            //     path: '/user',
-            //     name: 'user',
-            //     component: () => import('@/views/User.vue')
-            // }
+            {
+                path: '/article/content',
+                component: () => import('@/views/article/Content.vue')
+            }
         ]        
     }
 ]

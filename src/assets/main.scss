@@ -1,5 +1,6 @@
 body {
-  background-color: var(--el-fill-color-lighter);
+  // background-color: var(--el-fill-color-lighter);
+  background-color: var(--el-bg--color);
   margin: 0;
 }
 
@@ -17,4 +18,22 @@ body {
 .fade-slide-leave-to {
   transform: translateX(30px);
   opacity: 0;
+}
+
+/* 公用组件的样式 */
+.el-card,
+#card {
+  /* background-color: var(--el-bg-color); */
+  background-color: var(--el-card-bg-color);
+  color: var(--el-text-color-primary);
+  box-shadow: 0 0px 0px #ccc!important;
+  border: solid 1px var(--el-border-color);
+  overflow: hidden;
+}
+
+#float-botton {
+  background-color: var(--el-bg-color-overlay);
+  box-shadow: var(--el-box-shadow-lighter)!important;
+  border: none;
+  z-index: 5;
 }
