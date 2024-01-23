@@ -1,7 +1,10 @@
 <script setup>
+import CommentArea from '@/components/CommentArea.vue'
+import Card from '@/components/Card.vue'
+import SmallList from '@/components/SmallList.vue'
 import { ref, computed, watch } from 'vue'
 import { articleCategoryListService, articleListService } from '@/api/article.js' // 导入文章接口
-import { GoodTwo, Star, Comment, PreviewOpen, Calendar } from '@icon-park/vue-next'
+import { GoodTwo, Star, Comment, PreviewOpen, Calendar, TagOne, Announcement } from '@icon-park/vue-next'
 
 // 1.1 引入Vditor 构造函数
 import Vditor from 'vditor'
@@ -45,7 +48,54 @@ articleCategoryList()
 // 无限滚动
 import { count, loading, noMore, getTotal } from '@/utils/scroll'
 
-
+// 评论
+const comments = ref([{
+      id: 'comment0001', //主键id
+      date: '2018-07-05 08:30',  //评论时间
+      ownerId: 'talents100020', //文章的id
+      fromId: 'errhefe232213',  //评论者id
+      fromName: '犀利的评论家',   //评论者昵称
+      fromAvatar: 'http://ww4.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2pddjuj30v90uvagf.jpg', //评论者头像
+      likeNum: 3, //点赞人数
+      content: '非常靠谱的程序员',  //评论内容
+      reply: [  //回复，或子评论
+        {
+          id: '34523244545',  //主键id
+          commentId: 'comment0001',  //父评论id，即父亲的id
+          fromId: 'observer223432',  //评论者id
+          fromName: '夕阳红',  //评论者昵称
+          fromAvatar: 'https://wx4.sinaimg.cn/mw690/69e273f8gy1ft1541dmb7j215o0qv7wh.jpg', //评论者头像
+          toId: 'errhefe232213',  //被评论者id
+          toName: '犀利的评论家',  //被评论者昵称
+          toAvatar: 'http://ww4.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2pddjuj30v90uvagf.jpg',  //被评论者头像
+          content: '赞同，很靠谱，水平很高',  //评论内容
+          date: '2018-07-05 08:35'   //评论时间
+        },
+        {
+          id: '34523244545',
+          commentId: 'comment0001',
+          fromId: 'observer567422',
+          fromName: '清晨一缕阳光',
+          fromAvatar: 'http://imgsrc.baidu.com/imgad/pic/item/c2fdfc039245d688fcba1b80aec27d1ed21b245d.jpg',
+          toId: 'observer223432',
+          toName: '夕阳红',
+          toAvatar: 'https://wx4.sinaimg.cn/mw690/69e273f8gy1ft1541dmb7j215o0qv7wh.jpg',
+          content: '大神一个！',
+          date: '2018-07-05 08:50'
+        }
+      ]
+    },
+    {
+      id: 'comment0002',
+      date: '2018-07-05 08:30',
+      ownerId: 'talents100020',
+      fromId: 'errhefe232213',
+      fromName: '毒蛇郭德纲',
+      fromAvatar: 'http://ww1.sinaimg.cn/bmiddle/006DLFVFgy1ft0j2q2p8pj30v90uzmzz.jpg',
+      likeNum: 0,
+      content: '从没见过这么优秀的人',
+      reply: []
+    }])
 </script>
 
 <template>
@@ -70,10 +120,10 @@ import { count, loading, noMore, getTotal } from '@/utils/scroll'
             </el-space>
         </el-col>
 
-        <el-col class="article" :xs="24" :sm="24" :md="17" :lg="12" :xl="11" style="padding: 0.5rem;padding-top: 0;">
+        <el-col class="article" :xs="24" :sm="24" :md="17" :lg="12" :xl="11">
             <!-- 文章内容 -->
             <div class="article-content">
-                <h1>cwwwwcwcwwp</h1>
+                <h1 style="margin-top: 0;">cwwwwcwcwwp</h1>
                 <div style="display: flex;justify-content: space-between">
                     <div class="article-info">
                         <span>作者名</span>
@@ -99,38 +149,42 @@ import { count, loading, noMore, getTotal } from '@/utils/scroll'
                 </div>
             </div>
 
-            <!-- 评论 -->
-            <div class="comment">
-                ffffff
-            </div>
+            <!-- 评论区 -->
+            <el-col class="comment">
+                <CommentArea :comments="comments" />
+            </el-col>
         </el-col>
 
         <!-- 右侧栏 -->
         <el-col class="hidden-md-and-down" :span="8" style="padding-left: 15px;justify-content: start;">
             <el-space class="right-side" direction="vertical" :size="15">
-                <el-card v-for="i in 2" :key="i" class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span>Card name</span>
-                        </div>
+                <Card style="width: 270px;">
+                    <template #icon>
+                        <Announcement />
                     </template>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        {{ 'List item ' + o }}
-                    </div>
-                </el-card>
+                    <template #title>
+                        <span>公告</span>
+                    </template>
+                    <template #panel>
+                        <SmallList :items="articles" />
+                    </template>
+                </Card>
 
-                <!-- 分类列表 -->
-                <el-card class="category-list box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span>Card name</span>
+                <Card style="width: 270px;">
+                    <template #icon>
+                        <TagOne />
+                    </template>
+                    <template #title>
+                        <span>推荐标签</span>
+                    </template>
+                    <template #panel>
+                        <div style="display: flex;flex-wrap: wrap;gap: 15px;">
+                            <el-button v-for="category in categories" :key="category.categoryId" size="small" text bg style="margin: 0;">
+                                {{ category.categoryName }}
+                            </el-button>
                         </div>
                     </template>
-                    <el-space class="category-tags">
-                        <el-button v-for="category in categories" :key="category.categoryId" size="small">{{
-                            category.categoryName }}</el-button>
-                    </el-space>
-                </el-card>
+                </Card>
 
             </el-space>
         </el-col>
@@ -164,14 +218,9 @@ import { count, loading, noMore, getTotal } from '@/utils/scroll'
 .article-content,
 .comment {
     background-color: var(--el-bg-color);
-    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 15px;
 }
-
-/* .box-card,
-.article-content,
-.comment {
-    border: solid 1px var(--el-border-color);
-} */
 
 .article,
 .article-content,
@@ -179,28 +228,6 @@ import { count, loading, noMore, getTotal } from '@/utils/scroll'
     display: flex;
     flex-direction: column;
     justify-content: start;
-}
-
-.box-card {
-    width: 270px;
-}
-
-.article {
-    padding: 0 !important;
-
-    .article-content {
-        padding: 20px;
-        margin-bottom: 15px;
-
-        h1 {
-            margin-top: 0;
-        }
-    }
-}
-
-.comment {
-    padding: 10px;
-    margin-bottom: 15px;
 }
 
 .left-side .el-button {

@@ -27,7 +27,7 @@ const value = ref(false) // 开关默认状态
             <el-menu-item class="hidden-sm-and-down">
                 <img
                     style="width: 100px"
-                    src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/e08da34488b114bd4c665ba2fa520a31.svg"
+                    src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/e08da34488b114bd4c665ba2fa520a31.sv"
                     alt="LOGO"
                 />
             </el-menu-item>

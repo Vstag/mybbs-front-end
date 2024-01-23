@@ -1,7 +1,9 @@
 <script setup>
+import Card from '@/components/Card.vue'
+import SmallList from '@/components/SmallList.vue'
 import {ref, computed, watch} from 'vue'
 import {articleCategoryListService, articleListService} from '@/api/article.js' // 导入文章接口
-import { PreviewOpen, TagOne, ThumbsUp } from '@icon-park/vue-next'
+import { PreviewOpen, TagOne, ThumbsUp, Announcement, PictureOne } from '@icon-park/vue-next'
 
 const categoryId = ref('') // 分类id
 const state = ref('') // 文章发布状态
@@ -98,8 +100,8 @@ const url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.
                                     <el-col class="cover" :xs="7" :span="5">
                                         <el-image :src="url" style="width: 100%;border-radius: 5px;">
                                             <template #error>
-                                                <div class="image-slot">
-                                                    <el-icon><icon-picture /></el-icon>
+                                                <div class="image-slot" style="font-size: 30px;">
+                                                    <PictureOne />
                                                 </div>
                                             </template>
                                         </el-image>
@@ -108,7 +110,7 @@ const url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.
                             </div>
 
                             <!-- 分割线 -->
-                            <el-divider style="width: 95%;margin: 0;" />
+                            <el-divider style="width: 100%;margin: 0;" />
                         </el-row>
 
                         <p v-loading="loading" style="height: 40px;">
@@ -123,34 +125,33 @@ const url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.
         <!-- 右侧栏 -->
         <el-col class="hidden-md-and-down" :span="8" style="padding-left: 15px;justify-content: start;">
             <el-space class="right-side" direction="vertical" :size="15">
-                <el-card v-for="i in 2" :key="i" class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <TagOne size="20" />
-                            <span>Card name</span>
-                        </div>
+                <Card style="width: 300px;">
+                    <template #icon>
+                        <Announcement />
                     </template>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        {{ 'List item ' + o }}
-                    </div>
-                </el-card>
+                    <template #title>
+                        <span>公告</span>
+                    </template>
+                    <template #panel>
+                        <SmallList :items="articles" :maxCount="7" />
+                    </template>
+                </Card>
 
-                <!-- 分类列表 -->
-                <el-card class="category-list box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <TagOne size="20" />
-                            <span>Card name</span>
+                <Card style="width: 300px;">
+                    <template #icon>
+                        <TagOne />
+                    </template>
+                    <template #title>
+                        <span>推荐标签</span>
+                    </template>
+                    <template #panel>
+                        <div style="display: flex;flex-wrap: wrap;gap: 15px;">
+                            <el-button v-for="category in categories" :key="category.categoryId" size="small" text bg style="margin: 0;">
+                                {{ category.categoryName }}
+                            </el-button>
                         </div>
                     </template>
-                    <el-space class="category-tags">
-                        <el-button
-                            v-for="category in categories"
-                            :key="category.categoryId"
-                            size="small"
-                        >{{ category.categoryName }}</el-button>
-                    </el-space>
-                </el-card>
+                </Card>
 
             </el-space>     
         </el-col>
@@ -186,17 +187,6 @@ const url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.
 .right-side {
     position: fixed;
     top: 75px;
-
-    .category-list {
-        /* position: sticky;
-        top: 80px; */
-
-        .category-tags {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(22%, 1fr));
-            gap: 10px;
-        }
-    }
 }
 
 .card-header span {
@@ -208,17 +198,6 @@ const url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.
     {
         font-size: small;
         color: var(--el-text-color-secondary);
-}
-
-.image-slot {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background: var(--el-fill-color);
-    color: var(--el-text-color-secondary);
-    font-size: 30px;
 }
     
 </style>
