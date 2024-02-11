@@ -39,10 +39,15 @@ const props = defineProps({
     width: 20px;
     height: 20px;
     margin-right: 10px;
+    border-radius: 3px;
   }
 
   .content {
     color: var(--el-text-color-regular);
   }
+}
+
+.list:hover {
+  background-color: var(--el-fill-color-light);
 }
 </style>

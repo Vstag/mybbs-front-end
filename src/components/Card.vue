@@ -29,7 +29,7 @@
 }
 
 .panel {
-  padding: 15px;
+  padding: 8px 15px;
   font-size: 14px;
 }
 </style>

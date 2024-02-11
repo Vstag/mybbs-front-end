@@ -70,10 +70,21 @@ const url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.
                             <!-- 文章内容 -->
                             <div class="article" style="width: 100%;padding: 15px;">
                                 <el-row>
+                                    <!-- 文章封面 -->
+                                    <el-col class="cover" :xs="7" :span="5">
+                                        <el-image :src="url" style="width: 100%;">
+                                            <template #error>
+                                                <div class="image-slot" style="font-size: 30px;">
+                                                    <PictureOne />
+                                                </div>
+                                            </template>
+                                        </el-image>
+                                    </el-col>
+
                                     <!-- 文章信息 -->
                                     <el-col :xs="17" :span="19" style="height: 100%;flex-direction: column;">
                                         <h3 style="margin: 0">{{ article.title }}</h3>
-                                        <p class="article-intro" style="height: 50px;;color: #73767a;overflow: hidden;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden;">
+                                        <p class="article-intro" style="height: 50px;;color: #73767a;overflow: hidden;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;">
                                             {{ article.content }}
                                         </p>
 
@@ -92,19 +103,8 @@ const url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.
                                                 </span>
                                             </div>
 
-                                            <el-tag size="small" style="margin-right: 1rem;">Tag 1</el-tag>
+                                            <el-tag size="small">Tag 1</el-tag>
                                         </div>
-                                    </el-col>
-                                    
-                                    <!-- 文章封面 -->
-                                    <el-col class="cover" :xs="7" :span="5">
-                                        <el-image :src="url" style="width: 100%;border-radius: 5px;">
-                                            <template #error>
-                                                <div class="image-slot" style="font-size: 30px;">
-                                                    <PictureOne />
-                                                </div>
-                                            </template>
-                                        </el-image>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -169,6 +169,11 @@ const url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.
 
     .cover {
         max-height: 120px;
+        padding-right: 10px;
+        
+        .el-image {
+            border-radius: 5px;
+        }
     }
 }
 

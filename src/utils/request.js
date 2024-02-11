@@ -1,53 +1,134 @@
-import axios from 'axios';
-import router from '@/router';
-import {useTokenStore}  from '@/stores/token.js';
-import { ElMessage } from 'element-plus'
+import axios from 'axios'
 
-// 定义一个变量,记录公共的前缀 baseURL
-const baseURL = '/api';
-const instance = axios.create({ baseURL })
+/**
+ * 封装一个Http请求工具类
+ */
+export default class Request {
+  static get GET() {
+    return 1
+  }
+  static get POST() {
+    return 2
+  }
+  static get PUT() {
+    return 3
+  }
+  static get PATCH() {
+    return 4
+  }
+  static get DELETE() {
+    return 5
+  }
 
-// 添加响应拦截器
-instance.interceptors.response.use(
-    result => {
-        // 判断业务状态码
-        if(result.data.code === 0) {
-            return result.data
-        }
-        
-        ElMessage.error(result.data.message?result.data.message:'服务异常')
-        return Promise.reject(result.data) //异步操作的状态转换为失败
-    },
-    err => {
-        // 判断是否登录
-        if (err.response.status === 401) {
-            ElMessage.error('请先登录')
-            userRouter.push('/login')
-        } else {
-            ElMessage.error('服务异常')
-        }
-
-        return Promise.reject(err); // 异步的状态转化成失败的状态
+  /**
+   * 发送请求
+   * @param method 请求方式，如Request.GET
+   * @param url 请求地址
+   * @param data 上传数据
+   * @param upType 上传数据方式，如http.upType.form
+   * @param options [可选]其他配置选项
+   * @returns {Promise} 请求发送后的Promise对象
+   */
+  static request(method, url, data, upType, options = null) {
+    // 组装参数
+    const config = {
+      url: url,
+      upType: upType,
+      ...options
     }
-)
-
-// 添加请求拦截器
-instance.interceptors.request.use(
-    // 请求前的回调
-    (config) => {
-        const tokenStore = useTokenStore() // 获取token
-
-        if (tokenStore.token) {
-            config.headers.Authorization = tokenStore.token // 将token添加到请求头中
-        }
-
-        return config
-    },
-
-    // 请求错误的回调
-    (err) => {
-        Promise.reject(err)
+    switch (method) {
+      case Request.GET:
+        config.method = 'get'
+        config.params = data
+        break
+      case Request.POST:
+        config.method = 'post'
+        config.data = data
+        break
+      case Request.PUT:
+        config.method = 'put'
+        config.data = data
+        break
+      case Request.PATCH:
+        config.method = 'patch'
+        config.data = data
+        break
+      case Request.DELETE:
+        config.method = 'delete'
+        config.data = data
+        break
     }
-)
+    return axios.request(config)
+  }
 
-export default instance;
+  /**
+   * 发送表单请求
+   * @param method 请求方式，如Request.GET
+   * @param url 请求地址
+   * @param data 上传数据
+   * @param options [可选]其他配置选项
+   * @returns {Promise} 请求发送后的Promise对象
+   */
+  static requestForm(method, url, data, options = null) {
+    return Request.request(method, url, data, axios.upType.form, options)
+  }
+
+  /**
+   * 发送JSON请求
+   * @param method 请求方式，如Request.GET
+   * @param url 请求地址
+   * @param data 上传数据
+   * @param options [可选]其他配置选项
+   * @returns {Promise} 请求发送后的Promise对象
+   */
+  static requestJson(method, url, data, options = null) {
+    return Request.request(method, url, data, axios.upType.json, options)
+  }
+
+  /**
+   * 发送带文件上传的请求，该方法会完成js数据对象转换成FormData对象操作
+   * 请求方式以post方式发送
+   * @param url 请求地址
+   * @param data 包括file数据的js数据对象
+   * @param options [可选]其他配置选项
+   * @returns {Promise} 请求发送后的Promise对象
+   */
+  static postFile(url, data, options = null) {
+    //将data转换成FormData对象
+    const formData = new FormData()
+    for (let key in data) {
+      formData.append(key, data[key])
+    }
+    //发送请求
+    return Request.request(Request.POST, url, formData, axios.upType.file, options)
+  }
+
+  /**
+   * 以二进制的方式上传文件
+   * @param url 上传地址
+   * @param file 文件域选择的文件对象
+   * @param success 上传成功回调
+   * @param fail 上传失败回调
+   * @param options [可选]其他配置选项
+   */
+  static postFileStream(url, file, success, fail, options = null) {
+    // 读取文件
+    let reader = new FileReader()
+    reader.readAsArrayBuffer(file)
+    reader.onloadend = function () {
+      // 读取文件失败
+      if (reader.error) {
+        fail('文件读取失败')
+        return
+      }
+      // 上传文件
+      Request.request(Request.POST, url, reader.result, axios.upType.stream, options)
+        .then((res) => {
+          success(res)
+        })
+        .catch((err) => {
+          fail(err)
+        })
+    }
+  }
+}

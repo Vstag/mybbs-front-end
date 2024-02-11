@@ -151,7 +151,7 @@ const register = async() => {
     flex-direction: column;
     justify-content: center;
     align-items: center ;
-    background: url(https://picx.zhimg.com/3b5d9eaa6b80cf4983b709a28662975c_r.jpg?source=1def8aca) no-repeat;
+    background: url('@/assets/background.png') no-repeat;
     background-size: cover;
 
     .form {

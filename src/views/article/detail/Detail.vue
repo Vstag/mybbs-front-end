@@ -1,26 +1,46 @@
 <script setup>
-import CommentArea from '@/components/CommentArea.vue'
+import CommentArea from '@/components/comment/CommentArea.vue'
 import Card from '@/components/Card.vue'
 import SmallList from '@/components/SmallList.vue'
+import { MdPreview } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 import { ref, computed, watch } from 'vue'
 import { articleCategoryListService, articleListService } from '@/api/article.js' // 导入文章接口
 import { GoodTwo, Star, Comment, PreviewOpen, Calendar, TagOne, Announcement } from '@icon-park/vue-next'
 
-// 1.1 引入Vditor 构造函数
-import Vditor from 'vditor'
-// 1.2 引入样式
-import 'vditor/dist/index.css';
-import { onMounted } from 'vue';
-// 2. 获取DOM引用
-const vditor = ref()
-// 3. 在组件初始化时，就创建Vditor对象，并引用
-onMounted(() => {
-    vditor.value = new Vditor('vditor', {
-        value: '# Hello, Vditor!',
-        mode: 'ir', // ir 模式用于展示 Markdown
-        readOnly: true, // 设置为只读模式，禁止编辑
-    })
-})
+// md-editor-v3相关
+const text = ref(`
+这是一个段落，可以在这里写一些文字。
+# 标题一
+这是一个段落，可以在这里写一些文字。
+## 标题二
+这是另一个段落。
+### 标题三
+\`\`\`js
+// vite.config.js
+import { defineConfig } from 'vite';
+import prismjs from 'vite-plugin-prismjs';
+
+export default defineConfig({
+  plugins: [
+    prismjs({
+      languages: 'all',
+    }),
+  ],
+});
+\`\`\`
+这是一个列表：
+- 项目一
+- 项目二
+- 项目三
+### 标题四
+这是一个表格：
+| 列1 | 列2 | 列3 |
+| --- | --- | --- |
+| 1   | 2   | 3   |
+| 4   | 5   | 6   |
+##### 标题五
+这是一个链接：[Google](https://www.google.com/)`)
 
 const categoryId = ref('') // 分类id
 const state = ref('') // 文章发布状态
@@ -120,17 +140,17 @@ const comments = ref([{
             </el-space>
         </el-col>
 
-        <el-col class="article" :xs="24" :sm="24" :md="17" :lg="12" :xl="11">
-            <!-- 文章内容 -->
-            <div class="article-content">
-                <h1 style="margin-top: 0;">cwwwwcwcwwp</h1>
-                <div style="display: flex;justify-content: space-between">
-                    <div class="article-info">
+        <el-col class="article" :xs="24" :sm="24" :md="17" :lg="12" :xl="11" style="overflow: hidden;">
+            <!-- 文章信息 -->
+            <div class="article-content" style="margin-bottom: 20px;">
+                <h1 class="article-title" style="margin: 0;">文章标题</h1>
+                <div class="article-info" style="padding: 15px 0;display: flex;justify-content: space-between">
+                    <div>
                         <span>作者名</span>
                         <el-divider direction="vertical" />
                         <span>
                             <Calendar />
-                            2023-11-16
+                            发布于 2023-11-16 17:20
                         </span>
                         <el-divider direction="vertical" />
                         <span>
@@ -140,13 +160,17 @@ const comments = ref([{
                     </div>
                 </div>
 
-                <!-- md文档 -->
-                <div id="vditor"></div>
+                <div style="padding: 0 20px;"><el-divider style="width: 100%;margin: 0;" /></div>
 
-                <div>
-                    <span class="article-category">标签：</span>
+                <!-- 文章内容 -->
+                <MdPreview v-model="text" theme="${theme}" previewTheme="default"></MdPreview>
+
+                <div class="article-category" style="padding: 20px 0;">
+                    <span class="label">标签：</span>
                     <el-tag size="small" style="margin-right: 1rem;">Tag 1</el-tag>
                 </div>
+
+                <div style="padding: 0 20px;"><el-divider style="width: 100%;margin: 0;" /></div>
             </div>
 
             <!-- 评论区 -->
@@ -215,11 +239,17 @@ const comments = ref([{
     }
 }
 
+.article-info,
+.article-category,
+.article-title,
+.comment {
+    padding-left: 20px!important;
+    padding-right: 20px!important;
+}
+
 .article-content,
 .comment {
     background-color: var(--el-bg-color);
-    padding: 20px;
-    margin-bottom: 15px;
 }
 
 .article,
@@ -253,8 +283,9 @@ const comments = ref([{
 
 .article-info,
 .article-intro,
-.article-category {
+.article-category .label {
     font-size: small;
     color: var(--el-text-color-secondary);
 }
+
 </style>
