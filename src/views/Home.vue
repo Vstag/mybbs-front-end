@@ -1,5 +1,6 @@
 <script setup>
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 import { disabled, load } from '@/utils/scroll'
 
 </script>
@@ -18,6 +19,9 @@ import { disabled, load } from '@/utils/scroll'
         <el-main>
             <router-view />
         </el-main>
+
+        <!-- 页脚 -->
+        <Footer></Footer>
 
         <!-- 回到顶部 -->
         <el-backtop class="hidden-sm-and-down" :right="30" :bottom="40" />

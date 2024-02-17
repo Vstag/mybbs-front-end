@@ -10,41 +10,6 @@ import { MdEditor } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { Plus } from "@element-plus/icons-vue";
 
-// 文章分类数据模型
-const categorys = ref([
-  {
-    id: 3,
-    categoryName: "美食",
-    categoryAlias: "my",
-    createTime: "2023-09-02 12:06:59",
-    updateTime: "2023-09-02 12:06:59",
-  },
-  {
-    id: 4,
-    categoryName: "娱乐",
-    categoryAlias: "yl",
-    createTime: "2023-09-02 12:08:16",
-    updateTime: "2023-09-02 12:08:16",
-  },
-  {
-    id: 5,
-    categoryName: "军事",
-    categoryAlias: "js",
-    createTime: "2023-09-02 12:08:33",
-    updateTime: "2023-09-02 12:08:33",
-  },
-]);
-
-const tokenStore = useTokenStore();
-const visibleDrawer = ref(false);
-
-// 获取文章分类列表
-const articleCategoryList = async () => {
-  let result = await articleCategoryListService();
-  categorys.value = result.data;
-};
-articleCategoryList();
-
 // 添加文章表单的数据模型
 const articleModel = ref({
   title: "",
@@ -53,6 +18,17 @@ const articleModel = ref({
   content: "",
   state: "",
 });
+
+const categories = ref(''); // 文章分类列表内容
+const tokenStore = useTokenStore();
+const visibleDrawer = ref(false);
+
+// 获取文章分类列表
+const articleCategoryList = async () => {
+  let result = await articleCategoryListService();
+  categories.value = result.data;
+};
+articleCategoryList();
 
 // 图片上传成功的回调函数
 const uploadSuccess = (result) => {
@@ -75,6 +51,7 @@ const addArticle = async (clickState) => {
   articleModel.value = {
     title: "",
     content: "",
+    summary: "",
     state: "",
     category: "",
   };
@@ -86,6 +63,8 @@ const addArticle = async (clickState) => {
   <div class="top">
     <el-input
       v-model="articleModel.title"
+      show-word-limit
+      maxlength="30"
       placeholder="请输入文章标题"
       class="input-title"
       size="large"
@@ -112,13 +91,23 @@ const addArticle = async (clickState) => {
       <el-form-item label="文章分类">
         <el-select placeholder="请选择" v-model="articleModel.categoryId">
           <el-option
-            v-for="c in categorys"
-            :key="c.id"
+            v-for="c in categories"
+            :key="c.categoryId"
             :label="c.categoryName"
-            :value="c.id"
+            :value="c.categoryId"
           >
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="文章摘要">
+        <el-input
+          v-model="articleModel.summary"
+          show-word-limit
+          maxlength="100"
+          :rows="4"
+          type="textarea"
+          placeholder="请输入文章摘要"
+        />
       </el-form-item>
       <el-form-item label="文章封面">
         <!-- 

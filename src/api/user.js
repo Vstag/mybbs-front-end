@@ -12,12 +12,12 @@ export const userLoginService = (loginData) => {
 
 // 获取用户信息接口
 export const userInfoService = () => {
-    return Request.request(Request.GET, `/users/1`)
+    return Request.request(Request.GET, `/users/info`)
 }
 
 // 修改用户信息接口
 export const userInfoUpdateService = (userInfo) => {
-    return Request.requestJson(Request.PUT, `/users/1`, userInfo)
+    return Request.requestJson(Request.PUT, `/users/info`, userInfo)
 }
 
 // 修改用户头像接口

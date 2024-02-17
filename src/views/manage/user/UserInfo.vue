@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { userInfoUpdateService } from "@/api/user.js";
-import { userAvatarUpdateService } from '@/api/user.js'
+import { userAvatarUpdateService } from "@/api/user.js";
 import { ElMessage } from "element-plus";
 import { Plus, Upload, Picture } from "@element-plus/icons-vue";
 import { useTokenStore } from "@/stores/token.js";
@@ -14,11 +14,11 @@ const userInfo = ref({ ...userInfoStore.info });
 const imgUrl = ref(userInfoStore.info.userPic); //用户头像地址
 
 const rules = {
-  nickname: [
+  username: [
     { required: true, message: "请输入用户昵称", trigger: "blur" },
     {
       pattern: /^\S{2,10}$/,
-      message: "昵称必须是2-10位的非空字符串",
+      message: "昵称必须是1-16位的非空字符串",
       trigger: "blur",
     },
   ],
@@ -39,19 +39,19 @@ const updateUserInfo = async () => {
 };
 
 // 图片上传成功的回调函数
-const uploadSuccess = (result)=>{
-    imgUrl.value = result.data;
-}
+const uploadSuccess = (result) => {
+  imgUrl.value = result.data;
+};
 
 // 修改用户头像
-const updateAvatar = async ()=>{
-    // 调用接口
-    let result = await userAvatarUpdateService(imgUrl.value);
-    ElMessage.success(result.msg ? result.msg:'修改成功')
+const updateAvatar = async () => {
+  // 调用接口
+  let result = await userAvatarUpdateService(imgUrl.value);
+  ElMessage.success(result.msg ? result.msg : "修改成功");
 
-    // 修改pinia中的数据
-    userInfoStore.info.userPic = imgUrl.value
-}
+  // 修改pinia中的数据
+  userInfoStore.info.userPic = imgUrl.value;
+};
 </script>
 <template>
   <el-card class="page-container">
@@ -68,14 +68,24 @@ const updateAvatar = async ()=>{
           label-width="100px"
           size="large"
         >
-          <el-form-item label="登录名称">
-            <el-input v-model="userInfo.username" disabled></el-input>
+          <el-form-item label="UID">
+            <el-input v-model="userInfo.userId" disabled></el-input>
           </el-form-item>
-          <el-form-item label="用户昵称" prop="nickname">
-            <el-input v-model="userInfo.nickname"></el-input>
+          <el-form-item label="用户名称" prop="username">
+            <el-input v-model="userInfo.username"></el-input>
           </el-form-item>
           <el-form-item label="用户邮箱" prop="email">
             <el-input v-model="userInfo.email"></el-input>
+          </el-form-item>
+          <el-form-item label="用户简介" prop="bio">
+            <el-input
+              v-model="userInfo.bio"
+              show-word-limit
+              maxlength="50"
+              :rows="3"
+              placeholder="请输入用户简介"
+              type="textarea"
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="updateUserInfo"

@@ -1,23 +1,28 @@
-import { defineStore } from "pinia"
-import { ref } from "vue"
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const useTokenStore = defineStore('token', () => {
-    const token = ref('')
+export const useTokenStore = defineStore(
+  "token",
+  () => {
+    const token = ref("");
 
     // 设置token
     const setToken = (newToken) => {
-        token.value = newToken
-    }
+      token.value = newToken;
+    };
 
     // 移除token
     const removeToken = () => {
-        token.value = ''
-    }
+      token.value = "";
+    };
 
     return {
-        token, setToken, removeToken
-    }
-},
-{
-    persist: true // pinia持久化
-})
+      token,
+      setToken,
+      removeToken,
+    };
+  },
+  {
+    persist: true, // pinia持久化
+  }
+);

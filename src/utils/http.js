@@ -20,15 +20,15 @@ axios.upType = {
 
 // HTTP状态码
 axios.httpcode = {
-  //操作成功
-  SUCCESS: 0,
-  //暂未登录或TOKEN已经过期
+  // 操作成功
+  SUCCESS: 200,
+  // 暂未登录或TOKEN已经过期
   UNAUTHORIZED: 401,
-  //没有相关权限
+  // 没有相关权限
   FORBIDDEN: 403,
-  //访问页面未找到
+  // 访问页面未找到
   NOT_FOUND: 404,
-  //服务器错误
+  // 服务器错误
   SERVER_ERROR: 500,
 };
 
